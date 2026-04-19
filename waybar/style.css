@@ -1,167 +1,93 @@
+/* Palette Colori - Tema Dark Morbido (Stile Gemini Dark) */
+@define-color bg #1e1f20;          /* Nero/Grigio antracite molto morbido per lo sfondo */
+@define-color fg #e8eaed;          /* Testo grigio chiaro (non bianco puro) per non affaticare la vista */
+@define-color accent #6194A7;      /* Celeste scuro pastello */
+@define-color accent_light #9bc9dd;/* Azzurro chiaro pastello (per il workspace attivo) */
+@define-color alert #f38ba8;       /* Rosso per lo spegnimento/batteria scarica */
+@define-color block_bg #2a2b2f;    /* Grigio scuro per i blocchi hardware e inattivi */
+
 * {
-    border: none;
-    border-radius: 0;
-    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-family: "JetBrainsMono Nerd Font", "Font Awesome 6 Free", sans-serif;
+    font-size: 13px;
     font-weight: bold;
-    font-size: 14px;
+    border-radius: 0px; /* Rigorosamente squadrato */
+    border: none;
     min-height: 0;
 }
 
+/* Barra unica e fluttuante */
 window#waybar {
-    background: rgba(0, 0, 0, 0);
-    color: #cdd6f4;
+    background-color: @bg;
+    color: @fg;
 }
 
-tooltip {
-    background: #000000; /* Tooltip nero */
-    border-radius: 8px;
-    border-width: 2px;
-    border-style: solid;
-    border-color: #313244;
+.modules-left, .modules-center, .modules-right {
+    padding: 2px 12px;
 }
 
-/* --- WORKSPACES --- */
+/* --- MODULI DI SINISTRA (Workspaces e Media) --- */
+
+/* Blocchi Workspace base (non in esecuzione) */
 #workspaces button {
-    padding: 0px 5px;
-    color: #ffffff;
-    margin-right: 5px; 
+    padding: 2px 10px;        
+    margin: 3px 2px;          
+    background-color: @block_bg; 
+    color: @fg;               
 }
 
-#workspaces button:last-child {
-    margin-right: 0px; 
-}
-
+/* Blocco Workspace corrente (in esecuzione) */
 #workspaces button.active {
-    color: #000000;
-    background: #a6e3a1;
-    border-radius: 6px;
+    background-color: @accent_light; 
+    color: #1e1f20;           /* Testo scuro sul blocchetto azzurro per contrasto */       
+    text-shadow: none;
 }
 
+/* Effetto al passaggio del mouse */
 #workspaces button:hover {
-    background: rgba(255, 255, 255, 0.2);
-    color: #ffffff;
-    border-radius: 6px;
-}
-
-/* --- MODULI CON SFONDO COLORATO (Testo Scuro) --- */
-#pulseaudio,
-#network,
-#bluetooth,
-#battery {
-    padding: 0 10px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    border-radius: 6px;
-    color: #000000; /* Testo nero su icone colorate */
-}
-
-/* --- MODULI TRASPARENTI (Testo Chiaro) --- */
-/* Aggiunto #clock qui insieme a cpu e memory */
-#cpu, #memory, #clock {
-    padding: 0 10px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    border-radius: 6px;
-    color: #cdd6f4; /* Testo chiaro */
-    background: transparent;
-}
-
-/* Specifiche colori moduli hardware */
-#pulseaudio { background: #89b4fa; margin-right: 5px; margin-left: 0px; }
-#pulseaudio.microphone { background: #f38ba8; margin-right: 5px; }
-
-#network { background: #a6e3a1; margin-right: 5px; }
-#network.disconnected { background: #fab387; }
-#network.disabled { background: #bac2de; }
-
-#bluetooth { background: #cba6f7; margin-right: 5px; }
-#battery { background: #f9e2af; margin-right: 0px; }
-#battery.charging, #battery.plugged { background: #a6e3a1; }
-
-/* Margini specifici per stats */
-#cpu { margin-right: 5px; }
-#memory { margin-right: 0px; }
-#clock { margin: 0; }
-
-#battery.critical:not(.charging) {
-    background: #f38ba8; 
-    color: #1e1e2e;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
-}
-
-@keyframes blink { to { background-color: #fab387; } }
-
-/* --- CONTENITORI (Tutti Neri #000000) --- */
-.modules-left {
-    background: transparent;
-    border: none;
-    margin-top: 4px;
-    margin-left: 10px;
-    padding: 0;
-}
-
-#workspaces, #custom-media, #window {
-    background: #000000; /* Nero Pieno */
-    padding: 2px 10px;
-    border-radius: 8px; 
-    border: 1px solid #313244;
-    color: #cdd6f4;
-}
-
-#window {
-    margin-left: 10px;
-    margin-right: 20px; 
+    background-color: @accent_light;
+    color: #1e1f20;
+    box-shadow: none;
 }
 
 #custom-media {
-    margin-left: 10px;
-    min-width: 50px;
+    color: @accent;
+    padding-left: 15px; 
 }
 
-.modules-center {
-    background: #000000; /* Nero Pieno */
-    margin-top: 4px;
-    padding: 2px 10px; 
-    border-radius: 8px;
-    border: 1px solid #313244;
-    margin-left: 20px;
-    margin-right: 20px;
+/* --- MODULI CENTRALI (Data e Ora) --- */
+#clock {
+    color: @fg;
 }
 
-.modules-right {
-    background: transparent;
-    margin-top: 4px;
-    margin-right: 10px;
-    padding: 0;
-    border: none;
+/* --- MODULI DI DESTRA (Hardware e Spegnimento) --- */
+
+#pulseaudio, #pulseaudio.microphone, #network, #bluetooth, #battery {
+    padding: 2px 8px; 
+    background-color: @block_bg;
+    margin: 3px 2px;
+    color: @fg;
 }
 
-/* BOX DI DESTRA (Tutti Neri #000000) */
-#tray, #hardware, #stats, #custom-power, #custom-reboot {
-    background: #000000; /* Nero Pieno */
-    padding: 2px 10px;
-    border-radius: 8px;
-    border: 1px solid #313244;
+#battery.charging {
+    color: #a6e3a1; /* Verde pastello per la ricarica */
+}
+#battery.warning:not(.charging) {
+    color: @alert;
+}
+
+/* Pulsanti di spegnimento e riavvio ingranditi */
+#custom-reboot {
+    background-color: @block_bg;
+    color: @accent;
+    font-size: 18px;
+    padding: 0 12px;
     margin-left: 10px;
 }
 
 #custom-power {
-    color: #f38ba8;
-    padding-left: 12px;
-    padding-right: 15px;
-    font-size: 16px;
+    background-color: @block_bg;
+    color: @alert;
+    font-size: 18px;
+    padding: 0 12px;
+    margin-left: 5px;
 }
-
-#custom-reboot {
-    color: #fab387; 
-    padding-left: 12px;
-    padding-right: 15px;
-    font-size: 16px;
-}
-
-#tray > .passive { -gtk-icon-effect: dim; }
-#tray > .needs-attention { -gtk-icon-effect: highlight; background-color: #eb4d4b; }
