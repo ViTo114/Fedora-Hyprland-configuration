@@ -1,82 +1,47 @@
 {
     "layer": "top",
     "position": "top",
-    "mod": "dock",
-    "exclusive": true,
-    "passthrough": false,
-    "gtk-layer-shell": true,
-    "height": 0,
+    "margin-top": 0,
+    "margin-bottom": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "spacing": 10,
 
+    // Disposizione: sinistra (workspaces, media), destra (hardware, power)
     "modules-left": [
         "hyprland/workspaces",
-        "custom/media",
-        "hyprland/window"
+        "custom/media"
     ],
     "modules-center": [
         "clock"
     ],
     "modules-right": [
-        "tray",
-        "group/stats",
         "group/hardware",
         "custom/reboot",
         "custom/power"
     ],
 
-    "hyprland/window": {
-        "format": "󱂬  {title}",
-        "max-length": 35,
-        "rewrite": {
-            "": "Desktop"
-        },
-        "separate-outputs": true
-    },
-
+    // BLOCCO SINISTRO (Workspaces e Media)
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
-        "on-click": "activate",
-        "format": "{name}"
+        "format": "{name}" // Mostra direttamente il numero del workspace
     },
-
     "custom/media": {
-        "format": "  {}",
-        "escape": true,
-        "interval": 1,
-        "exec": "playerctl metadata --format='{{title}} - {{artist}}' || echo 'No media'",
-        "on-click": "playerctl play-pause",
-        "max-length": 50
+        "format": "󰝚 {}",
+        "return-type": "json",
+        "max-length": 40,
+        "exec": "playerctl -a metadata --format '{\"text\": \"{{artist}} - {{markup_escape(title)}}\", \"tooltip\": \"{{playerName}} : {{markup_escape(title)}}\", \"alt\": \"{{status}}\", \"class\": \"{{status}}\"}' -F",
+        "on-click": "playerctl play-pause"
     },
 
-    "tray": {
-        "icon-size": 18,
-        "spacing": 10,
-        "ignore-list": [
-            "swaync",
-            "Sway Notification Center" 
-        ]
+    // BLOCCO CENTRALE (Data e Ora)
+    "clock": {
+        "format": "{:%H:%M | %A %d %B}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>"
     },
 
-    // --- NUOVO GRUPPO STATISTICHE (RAM/CPU) ---
-    "group/stats": {
-        "orientation": "horizontal",
-        "modules": [
-            "cpu",
-            "memory"
-        ]
-    },
-
-    "cpu": {
-        "format": " {usage}%",
-        "tooltip": false
-    },
-
-    "memory": {
-        "format": " {}%",
-        "tooltip": false
-    },
-    // ------------------------------------------
-
+    // BLOCCO DESTRO (Hardware e Spegnimento)
     "group/hardware": {
         "orientation": "horizontal",
         "modules": [
@@ -87,75 +52,41 @@
             "battery"
         ]
     },
-
-    "clock": {
-        "format": " {:%H:%M   %d/%m/%Y}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
-    },
-
     "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": " Mute",
-        "format-icons": {
-            "default": ["", "", ""]
-        },
+        "format": "󰕾 {volume}%",
+        "format-muted": "󰝟 Mute",
         "on-click": "pavucontrol"
     },
-
     "pulseaudio#microphone": {
         "format": "{format_source}",
-        "format-source": " {volume}%",
-        "format-source-muted": " Muted",
-        "on-click": "pavucontrol",
-        "scroll-step": 5
+        "format-source": "󰍬 {volume}%",
+        "format-source-muted": "󰍭 Mute",
+        "on-click": "pavucontrol -t 4"
     },
-
     "network": {
-        "format-wifi": "  {signalStrength}%",
-        "format-ethernet": " Connected",
-        "tooltip-format": "{essid} - {ifname} via {gwaddr}",
-        "format-linked": "{ifname} (No IP)",
-        "format-disconnected": "⚠ Disconnected",
-        "format-disabled": "  off",
-        "format-alt": "{ifname}: {ipaddr}",
-        "on-click": "rfkill toggle wlan",
-        "on-click-right": "nm-connection-editor"
+        "format-wifi": "󰤨  {essid}",
+        "format-disconnected": "󰤭  Offline",
+        "tooltip-format": "{ifname} via {gwaddr}",
+        "on-click": "nm-connection-editor"
     },
-
     "bluetooth": {
-        "format": " {status}",
-        "format-disabled": " off", 
-        "format-connected": " Connected",
-        "tooltip-format": "{controller_alias}\t{controller_address}",
-        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
-        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        "on-click": "rfkill toggle bluetooth",
-        "on-click-right": "blueman-manager"
+        "format": "󰂯 {status}",
+        "format-connected": "󰂱 {device_alias}",
+        "on-click": "blueman-manager"
     },
-
     "battery": {
-        "states": {
-            "good": 95,
-            "warning": 30,
-            "critical": 15
-        },
         "format": "{icon} {capacity}%",
-        "format-charging": " {capacity}%",
-        "format-plugged": " {capacity}%",
-        "format-alt": "{time} {icon}",
-        "format-icons": ["", "", "", "", ""]
+        "format-charging": "󰂄 {capacity}%",
+        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
-
     "custom/reboot": {
-        "format": "",
-        "tooltip": false,
+        "format": "󰑐",
+        "tooltip-format": "Riavvia il PC",
         "on-click": "systemctl reboot"
     },
-
     "custom/power": {
-        "format": "",
-        "tooltip": false,
-        "on-click": "systemctl poweroff",
-        "on-click-right": "swaync-client -d -sw"
+        "format": "󰐥",
+        "tooltip-format": "Spegni il PC",
+        "on-click": "systemctl poweroff"
     }
 }
